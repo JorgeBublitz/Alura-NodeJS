@@ -1,6 +1,6 @@
 import express from 'express';
 import dbConnect from './config/dbConnect.js';
-import livros from './models/Livro.js';
+import routes from './routes/index.routes.js';
 
 const connection = await dbConnect();
 
@@ -8,18 +8,7 @@ connection.on('error', () => console.log('Erro de conexão'));
 connection.once('open', () => console.log('Conexão com o banco feita com sucesso'));
 
 const app = express();
-app.use(express.json()); // Middleware para parsear JSON no corpo das requisições
-
-// Rota para a página inicial
-app.get('/', (req, res) => {
-  res.status(200).send('Curso de Node.js - Alura');
-});
-
-// Rota para listar os livros
-app.get('/livros', async (req, res) => {
-  const listaLivros = await livros.find({});  
-  res.status(200).json(listaLivros);
-});
+routes(app);
 
 app.get('/livros/:id', (req, res) => {
     const index = buscarLivros(req.params.id);

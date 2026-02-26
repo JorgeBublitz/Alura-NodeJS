@@ -1,8 +1,8 @@
+import "dotenv/config";
 import mongoose from 'mongoose';
 
 async function dbConnect() { 
-    mongoose.connect('mongodb+srv://adminUser:admin1234@cluster0.kxpvtag.mongodb.net/?appName=Cluster0')
-
+    mongoose.connect(process.env.DB_CONNECTION_STRING);
     return mongoose.connection;
 };
 
