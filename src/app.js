@@ -1,17 +1,14 @@
 import express from 'express';
+import dbConnect from './config/dbConnect.js';
+import livros from './models/Livro.js';
+
+const connection = await dbConnect();
+
+connection.on('error', () => console.log('Erro de conexão'));
+connection.once('open', () => console.log('Conexão com o banco feita com sucesso'));
 
 const app = express();
 app.use(express.json()); // Middleware para parsear JSON no corpo das requisições
-
-const livros = [
-  { id: 1, titulo: 'O Senhor dos Anéis', autor: 'J.R.R. Tolkien' },
-  { id: 2, titulo: 'Harry Potter e a Pedra Filosofal', autor: 'J.K. Rowling' },
-  { id: 3, titulo: 'Cronicas de Nárnia', autor: 'C.S. Lewis' }
-];
-
-function buscarLivros(id) {
-  return livros.findIndex(livro => livro.id === Number(id));
-}
 
 // Rota para a página inicial
 app.get('/', (req, res) => {
@@ -19,8 +16,9 @@ app.get('/', (req, res) => {
 });
 
 // Rota para listar os livros
-app.get('/livros', (req, res) => {
-  res.status(200).json(livros);
+app.get('/livros', async (req, res) => {
+  const listaLivros = await livros.find({});  
+  res.status(200).json(listaLivros);
 });
 
 app.get('/livros/:id', (req, res) => {
