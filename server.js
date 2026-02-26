@@ -1,9 +1,8 @@
-import app from './src/app.js';
+import "dotenv/config";
+import app from "./src/app.js";
 
-const PORT = 3000; // Porta onde o servidor irá escutar as requisições
+const PORT = 3000;
 
-// Iniciando o servidor na porta 3000
 app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
-})
-
+  console.log("servidor escutando!");
+});
