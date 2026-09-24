@@ -2,13 +2,13 @@ import NaoEncontrado from "../erros/NaoEncontrado.js";
 import { autores } from "../models/index.js";
 
 class AutorController {
-  static listarAutores = async (req, res) => {
+  static listarAutores = async (req, res, next) => {
     try {
       const autoresResultado = await autores.find();
 
       res.status(200).json(autoresResultado);
     } catch (erro) {
-      res.status(500).json({ message: "Erro interno no servidor" });
+      next(erro);
     }
   };
 
@@ -44,7 +44,7 @@ class AutorController {
     try {
       const id = req.params.id;
   
-      const autorResultado = await autores.findByIdAndUpdate(id, {$set: req.body});
+      const autorResultado = await autores.findByIdAndUpdate(id, {$set: req.body}, {runValidators: true});
 
       if (autorResultado !== null) {
         res.status(200).send({message: "Autor atualizado com sucesso"});

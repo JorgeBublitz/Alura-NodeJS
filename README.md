@@ -1,31 +1,42 @@
-# 🚀 API Rest com Node.js, Express e MongoDB
+# Livraria API: Node.js, Express e MongoDB
 
-Este projeto é uma API REST robusta desenvolvida para o gerenciamento de Livros, focando em boas práticas de desenvolvimento, persistência de dados e resiliência.
+API REST de uma livraria (livros e autores), feita durante a formação de Node.js da Alura. O foco foi estruturar uma API com Express e Mongoose, tratar erros de forma centralizada e implementar buscas com filtros e paginação.
 
-## 🛠️ Tecnologias Utilizadas
+## O que a API faz
 
-- Runtime: Node.js
-- Framework: Express
-- Banco de Dados: MongoDB (com Mongoose)
-- Validação: Middlewares de erro e esquemas do Mongoose
-- Ferramentas: Postman e VS Code
+- CRUD de **livros** e **autores**, com o autor de cada livro carregado via `populate`.
+- **Busca com filtros combináveis**: editora, título, faixa de páginas e nome do autor.
+- **Paginação e ordenação** por query string (`limite`, `pagina`, `ordenacao=campo:1|-1`).
+- **Tratamento de erros centralizado** com classes próprias (`ErroBase`, `NaoEncontrado`, `RequisicaoIncorreta`, `ErroValidacao`): ID malformado retorna `400`, recurso inexistente `404` e dados inválidos `400` com a lista de problemas.
+- **Validações no schema do Mongoose**, aplicadas também nas atualizações.
 
-## 📋 Funcionalidades e Aprendizados
-O projeto foi construído em duas etapas principais, acumulando os seguintes conhecimentos:
+## Endpoints
 
-### Fase 1: Estrutura e Persistência
-- Configuração de ambiente com Node.js.
-- Criação de rotas utilizando o padrão REST.
-- Conexão e persistência de dados com MongoDB e Mongoose.
-- Implementação de operações CRUD (Create, Read, Update, Delete).
+| Método | Rota | Descrição |
+| --- | --- | --- |
+| `GET` | `/livros?limite=5&pagina=1&ordenacao=titulo:1` | Lista livros com paginação |
+| `GET` | `/livros/busca?editora=alura&minPaginas=100&nomeAutor=ana` | Busca com filtros (também paginada) |
+| `GET` | `/livros/:id` | Detalhe do livro com o autor |
+| `POST` · `PUT` · `DELETE` | `/livros` · `/livros/:id` | Cadastro, edição e remoção |
+| `GET` · `POST` · `PUT` · `DELETE` | `/autores` · `/autores/:id` | CRUD de autores |
 
-### Fase 2: Resiliência e Refinamento
-- Tratamento de Erros: Implementação de um manipulador de erros global para tornar a API mais resiliente.
-- Validação de Dados: Uso de middlewares para validar entradas do usuário.
-- Buscas Avançadas: Implementação de filtros dinâmicos por parâmetros de consulta (query strings).
-- Paginação: Controle de exibição de resultados para otimizar a performance da API.
+## Como rodar
 
-# 🎓 Certificados Alura
+**Pré-requisitos:** Node.js e um MongoDB (local ou Atlas).
 
-- [📜 Node.js: criando uma API Rest com Express e MongoDB](https://cursos.alura.com.br/user/bublitzjorge3/course/node-js-api-rest-express-mongodb/formalCertificate)
-- [📜 Node.js: lidando com buscas, filtros, paginação e erros em uma API](https://cursos.alura.com.br/user/bublitzjorge3/course/node-js-buscas-filtros-paginacao-erros-api/formalCertificate)
+```bash
+git clone https://github.com/JorgeBublitz/Alura-NodeJS.git
+cd Alura-NodeJS
+npm install
+cp .env.example .env    # informe a STRING_CONEXAO_DB
+npm run dev             # http://localhost:3000
+```
+
+## Stack
+
+Node.js · Express · MongoDB · Mongoose · ESLint
+
+## Certificados
+
+- [Node.js: criando uma API REST com Express e MongoDB](https://cursos.alura.com.br/user/bublitzjorge3/course/node-js-api-rest-express-mongodb/formalCertificate)
+- [Node.js: lidando com buscas, filtros, paginação e erros em uma API](https://cursos.alura.com.br/user/bublitzjorge3/course/node-js-buscas-filtros-paginacao-erros-api/formalCertificate)

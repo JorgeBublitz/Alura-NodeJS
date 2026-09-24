@@ -12,7 +12,8 @@ async function paginar(req, res, next){
 
     const resultado = req.resultado;
 
-    if(limite > 0 && pagina > 0) {
+    // Ordem aceita apenas 1 (crescente) ou -1 (decrescente)
+    if(limite > 0 && pagina > 0 && campoOrdenacao && [1, -1].includes(ordem)) {
       const resultadoPaginado = await resultado.find()
         .sort({ [campoOrdenacao]: ordem })
         .skip((pagina - 1) * limite)

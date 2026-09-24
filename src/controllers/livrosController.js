@@ -47,9 +47,7 @@ class LivroController {
     try {
       const id = req.params.id;
     
-      const livroResultado = await livros.findByIdAndUpdate(id, {$set: req.body});
-
-      console.log(livroResultado);
+      const livroResultado = await livros.findByIdAndUpdate(id, {$set: req.body}, {runValidators: true});
     
       if (livroResultado !== null) {
         res.status(200).send({message: "Livro atualizado com sucesso"});
@@ -67,8 +65,6 @@ class LivroController {
 
       const livroResultado = await livros.findByIdAndDelete(id);
 
-      console.log(livroResultado);
-      
       if (livroResultado !== null) {
         res.status(200).send({message: "Livro removido com sucesso"});
       } else {
@@ -83,16 +79,13 @@ class LivroController {
     try {
       const busca = await processaBusca(req.query);
 
-      if(busca === null) {
-        const livrosResultado = await livros
-          .find(busca)
-          .populate("autor");
-
-        req.resultado = livrosResultado;
-
+      // busca === null significa que o autor pesquisado não existe
+      if (busca !== null) {
+        // Passa a consulta (sem executar) para o middleware de paginação
+        req.resultado = livros.find(busca).populate("autor", "nome");
         next();
-      }else{
-        res.status(200).send("Nenhum livro encontrado com esse autor.");
+      } else {
+        res.status(200).json([]);
       }
     } catch (erro) {
       next(erro);
