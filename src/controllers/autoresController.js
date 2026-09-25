@@ -1,6 +1,18 @@
 import NaoEncontrado from "../erros/NaoEncontrado.js";
 import { autores } from "../models/index.js";
 
+const CAMPOS_EDITAVEIS_AUTOR = ["nome", "nacionalidade"];
+
+function filtrarCamposEditaveis(dados, camposPermitidos) {
+  const dadosFiltrados = {};
+  for (const campo of camposPermitidos) {
+    if (Object.prototype.hasOwnProperty.call(dados, campo)) {
+      dadosFiltrados[campo] = dados[campo];
+    }
+  }
+  return dadosFiltrados;
+}
+
 class AutorController {
   static listarAutores = async (req, res, next) => {
     try {
@@ -43,8 +55,9 @@ class AutorController {
   static atualizarAutor = async (req, res, next) => {
     try {
       const id = req.params.id;
-  
-      const autorResultado = await autores.findByIdAndUpdate(id, {$set: req.body}, {runValidators: true});
+      const dadosAtualizados = filtrarCamposEditaveis(req.body, CAMPOS_EDITAVEIS_AUTOR);
+
+      const autorResultado = await autores.findByIdAndUpdate(id, {$set: dadosAtualizados}, {runValidators: true});
 
       if (autorResultado !== null) {
         res.status(200).send({message: "Autor atualizado com sucesso"});
